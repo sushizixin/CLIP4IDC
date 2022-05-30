@@ -1,1 +1,1 @@
-# CLIP4IDC-CLIP-for-Image-Difference-Captioning
+# CLIP4IDC: CLIP for Image Difference Captioning
