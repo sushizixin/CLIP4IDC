@@ -1,8 +1,6 @@
 # CLIP4IDC: CLIP for Image Difference Captioning
 
-(**Sep. 20,2022**) Public version
-
-(**Aug. 7, 2022**) First version 
+(**Sep. 22,2022**) Public version
 
 The implementation of paper [**CLIP4IDC: CLIP for Image Difference Captioning**](https://arxiv.org/abs/2206.00629). 
 
