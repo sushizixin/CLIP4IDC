@@ -749,11 +749,6 @@ def main():
                 if early_stop > 10:
                     break
 
-        ## Uncomment if want to test on the best checkpoint
-        # if args.local_rank == 0:
-        #     model = load_model(-1, args, n_gpu, device, model_file=best_output_model_file)
-        #     eval_epoch(args, model, test_dataloader, device, n_gpu)
-
     elif args.do_eval:
         if args.local_rank == 0:
             eval_epoch(args, model, test_dataloader, tokenizer, device, n_gpu, epoch="eval")
