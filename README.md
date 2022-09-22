@@ -269,7 +269,7 @@ We find that the random seed has great effects on the results. The following res
 | sample var | ~1.44  | ~1.01  | ~2.95   | ~45.26  | 
 
 (**For Seed results**) 
-Remember to replace 
+You could also replace 
 
         caption = random.choice(caption)  # Line 193 in dataloader_clevr_caption.py
         
