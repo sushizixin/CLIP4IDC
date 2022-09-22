@@ -337,7 +337,7 @@ If you find CLIP4IDC useful in your work, you can cite the following paper:
 ```
 
 # Acknowledgments
-Our code is based on [CLIP](https://github.com/openai/CLIP), [UniVL](https://github.com/microsoft/UniVL) and [CLIP4Clip](https://github.com/ArrowLuo/CLIP4Clip).
+Our code is largely borrowed from [CLIP](https://github.com/openai/CLIP), [UniVL](https://github.com/microsoft/UniVL) and [CLIP4Clip](https://github.com/ArrowLuo/CLIP4Clip).
 
 # TODO
 We are sorry that some lines of the code are redundant and some variables are named with "video". 
