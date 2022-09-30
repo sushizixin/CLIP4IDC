@@ -1,7 +1,5 @@
 # CLIP4IDC: CLIP for Image Difference Captioning
 
-(**Sep. 21,2022**) Accepted to AACL, 2022
-
 The implementation of paper [**CLIP4IDC: CLIP for Image Difference Captioning**](https://arxiv.org/abs/2206.00629). 
 
 CLIP4IDC is a image difference captioning model based on [CLIP (ViT-B)](https://github.com/openai/CLIP). The model achieve competitive results on CLEVR-Change, Spot-the-Diff and Image Editing Request.
