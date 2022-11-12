@@ -78,7 +78,7 @@ class EvalCap(COCOEvalCap):
                 print("%s: %0.3f" % (method, score))
         self.setEvalImgs()
 
-def get_args(description='CLIP4Clip on Retrieval Task'):
+def get_args(description='CLIP4IDC on Captioning Task'):
     parser = argparse.ArgumentParser(description=description)
     parser.add_argument("--do_pretrain", action='store_true', help="Whether to run training.")
     parser.add_argument("--do_train", action='store_true', help="Whether to run training.")
