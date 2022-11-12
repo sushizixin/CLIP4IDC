@@ -22,7 +22,7 @@ torch.distributed.init_process_group(backend="nccl")
 
 global logger
 
-def get_args(description='CLIP4Clip on Retrieval Task'):
+def get_args(description='CLIP4IDC on Retrieval Task'):
     parser = argparse.ArgumentParser(description=description)
     parser.add_argument("--do_pretrain", action='store_true', help="Whether to run training.")
     parser.add_argument("--do_train", action='store_true', help="Whether to run training.")
