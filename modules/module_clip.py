@@ -253,6 +253,22 @@ class ResidualAttentionBlock(nn.Module):
         x = x + self.attention(self.ln_1(x))
         x = x + self.mlp(self.ln_2(x))
         return (x, video_frame)
+    
+    def visualize_attention(self, x: torch.Tensor):
+        attn_mask_ = self.attn_mask
+        if self.attn_mask is not None and hasattr(self.attn_mask, '__call__'):
+            attn_mask_ = self.attn_mask(x.size(0))   # LND
+
+        attn_mask_ = attn_mask_.to(dtype=x.dtype, device=x.device) if attn_mask_ is not None else None
+        attn_outputs, attn_weights = self.attn(x, x, x, need_weights=True, attn_mask=attn_mask_)
+        return attn_outputs, attn_weights
+    
+    def visualize_forward(self, x_tuple:tuple):
+        x, video_frame = x_tuple
+        attn_outputs, attn_weights = self.visualize_attention(self.ln_1(x))
+        x = x + attn_outputs
+        x = x + self.mlp(self.ln_2(x))
+        return (x, video_frame, attn_weights)
 
 
 class Transformer(nn.Module):
@@ -298,7 +314,7 @@ class VisualTransformer(nn.Module):
             self.conv2 = nn.Conv3d(in_channels=3, out_channels=width, kernel_size=(3, patch_size, patch_size),
                                    stride=(1, patch_size, patch_size), padding=(1, 0, 0), bias=False)
 
-    def forward(self, x: torch.Tensor, video_frame=-1):
+    def forward(self, x: torch.Tensor, video_frame=-1, visualize=False):
 
         if self.linear_patch == '3d':
             assert video_frame != -1
@@ -318,9 +334,17 @@ class VisualTransformer(nn.Module):
         x = self.ln_pre(x)
 
         x = x.permute(1, 0, 2)  # NLD -> LND
-
-        for i in range(self.intra_layers):
-            x = self.transformer.resblocks[i]((x, video_frame))[0]
+        
+        if visualize is True:
+            all_attn_weights = []
+            for i in range(self.intra_layers):
+                x, _, attn_weights = self.transformer.resblocks[i].visualize_forward((x, video_frame))
+                attn_weights = attn_weights.view(x.size(1) // video_frame, -1, attn_weights.size(-2),
+                                                 attn_weights.size(-1))
+                all_attn_weights.append(attn_weights)
+        else:
+            for i in range(self.intra_layers):
+                x = self.transformer.resblocks[i]((x, video_frame))[0]
         x = x.permute(1, 0, 2)  # LND -> NLD
 
         bs = x.size(0) // video_frame
@@ -332,16 +356,23 @@ class VisualTransformer(nn.Module):
         x = self.ln_mid(x)
 
         x = x.permute(1, 0, 2)  # NLD -> LND
-
-        for i in range(self.intra_layers, self.transformer.layers):
-            x = self.transformer.resblocks[i]((x, video_frame))[0]
+        
+        if visualize is True:
+            for i in range(self.intra_layers, self.transformer.layers):
+                x, _, attn_weights = self.transformer.resblocks[i].visualize_forward((x, video_frame))
+                all_attn_weights.append(attn_weights)
+        else:
+            for i in range(self.intra_layers, self.transformer.layers):
+                x = self.transformer.resblocks[i]((x, video_frame))[0]
         x = x.permute(1, 0, 2)  # LND -> NLD
 
         # Move the three lines below to `encode_image` for entire hidden sequence
         # x = self.ln_post(x[:, 0, :])
         # if self.proj is not None:
         #     x = x @ self.proj
-
+        
+        if visualize is True:
+            return x, all_attn_weights
         return x
 
 
