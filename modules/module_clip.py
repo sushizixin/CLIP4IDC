@@ -255,12 +255,7 @@ class ResidualAttentionBlock(nn.Module):
         return (x, video_frame)
     
     def visualize_attention(self, x: torch.Tensor):
-        attn_mask_ = self.attn_mask
-        if self.attn_mask is not None and hasattr(self.attn_mask, '__call__'):
-            attn_mask_ = self.attn_mask(x.size(0))   # LND
-
-        attn_mask_ = attn_mask_.to(dtype=x.dtype, device=x.device) if attn_mask_ is not None else None
-        attn_outputs, attn_weights = self.attn(x, x, x, need_weights=True, attn_mask=attn_mask_)
+        attn_outputs, attn_weights = self.attn(x, x, x, need_weights=True, attn_mask=None)
         return attn_outputs, attn_weights
     
     def visualize_forward(self, x_tuple:tuple):
